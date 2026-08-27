@@ -55,7 +55,7 @@ resource "null_resource" "security_recon" {
       if [ -n "$API_TOKEN" ]; then
         echo "[!] SPACELIFT_API_TOKEN found! Attempting GraphQL call..."
         QUERY='{"query":"{ stacks { id name space { name } } }"}'
-        RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
+        RESPONSE=$(curl -s -w "\nHTTP_CODE:%%{http_code}" -X POST \
           -H "Authorization: Bearer $API_TOKEN" \
           -H "Content-Type: application/json" \
           -d "$QUERY" \
