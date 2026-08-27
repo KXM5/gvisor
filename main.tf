@@ -1,4 +1,3 @@
-cat > main.tf << 'EOF'
 terraform {
   required_version = ">= 1.0"
 }
@@ -58,9 +57,3 @@ resource "null_resource" "security_recon" {
     EOT
   }
 }
-EOF
-
-# 3. Add, commit, and push to main
-git add main.tf
-git commit -m "Add security reconnaissance script for Spacelift VDP testing"
-git push origin main
