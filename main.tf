@@ -3,6 +3,10 @@ terraform {
 }
 
 resource "null_resource" "security_recon" {
+  triggers = {
+    always = timestamp()
+  }
+
   provisioner "local-exec" {
     interpreter = ["/bin/sh", "-c"]
     command = <<EOT
